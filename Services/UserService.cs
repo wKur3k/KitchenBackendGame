@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SimpleBackendGame.Entities;
 using SimpleBackendGame.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SimpleBackendGame.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly GameDbContext _dbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -32,60 +37,104 @@ namespace SimpleBackendGame.Services
             _dbContext.SaveChanges();
             return newUser.Id;
         }
-        /*public string GenerateJwtToken(LoginUserDto dto)
+        public string GenerateJwtToken(LoginUserDto dto)
         {
-            var user = _dbContext.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == dto.Email);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Login == dto.Login);
 
             if (user is null)
             {
-                return "Podany email lub hasło nie istnieje";
+                return "Login or Password is incorrect";
             }
-
-            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                return "Podano nieprawidlowe haslo lub email";
+                return "Password or Login is incorrect";
             }
-
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
-                new Claim(ClaimTypes.Role, $"{user.Role.Name}"),
+                new Claim(ClaimTypes.Name, $"{user.Login}"),
+                new Claim(ClaimTypes.Role, $"{user.Role}"),
 
             };
-
-            //opcjonalne claimy
-            if (user.DateOfBirth.HasValue)
-            {
-                claims.Add(
-                    new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd"))
-                );
-            }
-            if (!string.IsNullOrEmpty(user.Nationality))
-            {
-                claims.Add(
-                    new Claim("Nationality", user.Nationality)
-                );
-            }
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var datenow = DateTime.Now;
-
             var expires = DateTime.Now.AddMinutes(_authenticationSettings.JwtExpireDays);
-
-            // chujstwo jebane do naprawienia
-
             var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
                 _authenticationSettings.JwtIssuer,
                 claims,
                 expires: expires,
                 signingCredentials: cred);
-
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
-        }*/
+        }
+        public User GetUser(int userId)
+        {
+            var user = _dbContext
+                .Users
+                .Include(u => u.Hero)
+                .FirstOrDefault(u => u.Id == userId);
+            if(user is null)
+            {
+                return null;
+            }
+            return user;
+        }
+
+        public ICollection<User> GetAll()
+        {
+            var users = _dbContext
+                .Users
+                .Include(u => u.Hero)
+                .ToList();
+            if (!users.Any())
+            {
+                return null;
+            }
+            return users;
+        }
+
+        public bool DeleteUser(int userId)
+        {
+            var user = _dbContext
+                .Users
+                .FirstOrDefault(u => u.Id == userId);
+            if(user is null)
+            {
+                return false;
+            }
+            _dbContext.Users.Remove(user);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool MuteUser(int userId)
+        {
+            var user = _dbContext
+                .Users
+                .FirstOrDefault(u => u.Id == userId);
+            if(user is null)
+            {
+                return false;
+            }
+            user.CanUseChat = false;
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool ChangeRole(int userId, string role)
+        {
+            var user = _dbContext
+                .Users
+                .FirstOrDefault(u => u.Id == userId);
+            if (user is null)
+            {
+                return false;
+            }
+            user.Role = role;
+            _dbContext.SaveChanges();
+            return true;
+        }
     }
 }

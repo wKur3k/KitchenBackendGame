@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SimpleBackendGame.Entities;
+using SimpleBackendGame.Models;
+using SimpleBackendGame.Models.Validators;
+using SimpleBackendGame.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,8 +56,11 @@ namespace SimpleBackendGame
             });
 
             services.AddControllers().AddFluentValidation();
+            services.AddDbContext<GameDbContext>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped<IUserService, UserService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
             services.AddCors(options =>

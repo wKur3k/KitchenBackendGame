@@ -12,7 +12,7 @@ namespace SimpleBackendGame.Entities
         public string HashedPassword { get; set; }
         public bool CanUseChat { get; set; } = true;
         public string Role { get; set; } = "user";
-        public int HeroId { get; set; }
+        public int? HeroId { get; set; }
         public virtual Hero Hero { get; set; }
     }
 }

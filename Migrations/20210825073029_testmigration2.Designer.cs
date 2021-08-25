@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleBackendGame.Entities;
 
 namespace SimpleBackendGame.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    partial class GameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210825073029_testmigration2")]
+    partial class testmigration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,7 +162,7 @@ namespace SimpleBackendGame.Migrations
                     b.Property<string>("HashedPassword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HeroId")
+                    b.Property<int>("HeroId")
                         .HasColumnType("int");
 
                     b.Property<string>("Login")
@@ -172,8 +174,7 @@ namespace SimpleBackendGame.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HeroId")
-                        .IsUnique()
-                        .HasFilter("[HeroId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -208,7 +209,9 @@ namespace SimpleBackendGame.Migrations
                 {
                     b.HasOne("SimpleBackendGame.Entities.Hero", "Hero")
                         .WithOne("User")
-                        .HasForeignKey("SimpleBackendGame.Entities.User", "HeroId");
+                        .HasForeignKey("SimpleBackendGame.Entities.User", "HeroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Hero");
                 });
