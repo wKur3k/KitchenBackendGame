@@ -11,6 +11,7 @@ namespace SimpleBackendGame.Services
         string GenerateJwtToken(LoginUserDto dto);
         ICollection<User> GetAll();
         User GetUser(int userId);
+        ICollection<MessageDto> GetUserMessages(int userId);
         bool MuteUser(int userId);
         int RegisterUser(RegisterUserDto dto);
     }

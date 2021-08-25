@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SimpleBackendGame.Entities;
@@ -18,12 +19,14 @@ namespace SimpleBackendGame.Services
         private readonly GameDbContext _dbContext;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IMapper _mapper;
 
-        public UserService(GameDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public UserService(GameDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings, IMapper mapper)
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
+            _mapper = mapper;
         }
         public int RegisterUser(RegisterUserDto dto)
         {
@@ -135,6 +138,22 @@ namespace SimpleBackendGame.Services
             user.Role = role;
             _dbContext.SaveChanges();
             return true;
+        }
+
+        public ICollection<MessageDto> GetUserMessages(int userId)
+        {
+            var messages = _dbContext
+                .Messages
+                .Include(m => m.User)
+                .Where(m => m.UserId == userId)
+                .OrderBy(m => m.SentDate)
+                .ToList();
+            if (!messages.Any())
+            {
+                return null;
+            }
+            var result = _mapper.Map<List<MessageDto>>(messages);
+            return result;
         }
     }
 }

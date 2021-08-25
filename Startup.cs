@@ -60,7 +60,9 @@ namespace SimpleBackendGame
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+            services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMessageService, MessageService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
             services.AddCors(options =>

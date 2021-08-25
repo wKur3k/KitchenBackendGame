@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SimpleBackendGame.Entities;
 using SimpleBackendGame.Models;
 using SimpleBackendGame.Services;
@@ -11,6 +12,7 @@ namespace SimpleBackendGame.Controllers
 {
     [Route("api/user")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,6 +24,7 @@ namespace SimpleBackendGame.Controllers
 
         [HttpPost]
         [Route("register")]
+        [AllowAnonymous]
         public ActionResult RegisterUser(RegisterUserDto dto)
         {
             int userId = _userService.RegisterUser(dto);
@@ -30,14 +33,16 @@ namespace SimpleBackendGame.Controllers
 
         [HttpPost]
         [Route("login")]
+        [AllowAnonymous]
         public ActionResult LoginUser(LoginUserDto dto)
         {
             string token = _userService.GenerateJwtToken(dto);
             return Ok(token);
         }
-        //dlaModa+Admina
+
         [HttpGet]
         [Route("{userId}")]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult<User> GetUser([FromRoute] int userId)
         {
             var user = _userService.GetUser(userId);
@@ -47,8 +52,9 @@ namespace SimpleBackendGame.Controllers
             }
             return Ok(user);
         }
-        //dlaModa+Admina
+
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult<ICollection<User>> GetAll()
         {
             var users = _userService.GetAll();
@@ -58,9 +64,10 @@ namespace SimpleBackendGame.Controllers
             }
             return Ok(users);
         }
-        //dlaAdmina
+
         [HttpDelete]
         [Route("{userId}")]
+        [Authorize(Roles = "admin")]
         public ActionResult DeleteUser([FromRoute] int userId)
         {
             bool isDelted = _userService.DeleteUser(userId);
@@ -70,9 +77,10 @@ namespace SimpleBackendGame.Controllers
             }
             return NotFound("User not found");
         }
-        //dlaModa
+
         [HttpPut]
         [Route("{userId}/mute")]
+        [Authorize(Roles = "moderator")]
         public ActionResult MuteUser([FromRoute] int userId)
         {
             bool isMuted = _userService.MuteUser(userId);
@@ -82,9 +90,10 @@ namespace SimpleBackendGame.Controllers
             }
             return NotFound("User not found");
         }
-        //dlaAdmina
+
         [HttpPut]
         [Route("{userId}/role")]
+        [Authorize(Roles = "admin")]
         public ActionResult ChangeUserRole([FromRoute] int userId, [FromQuery] string role)
         {
             bool hasChanged = _userService.ChangeRole(userId, role);
@@ -93,6 +102,19 @@ namespace SimpleBackendGame.Controllers
                 return Ok();
             }
             return NotFound("User not found");
+        }
+
+        [HttpGet]
+        [Route("{userId}/message")]
+        [Authorize(Roles = "moderator")]
+        public ActionResult<ICollection<MessageDto>> GetUserMessages([FromRoute] int userId)
+        {
+            var messages = _userService.GetUserMessages(userId);
+            if(messages is null)
+            {
+                return NotFound();
+            }
+            return Ok(messages);
         }
     }
 }
