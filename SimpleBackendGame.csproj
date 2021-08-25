@@ -6,8 +6,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Entities\" />
     <Folder Include="Authorizations\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Models\Validators\" />
     <Folder Include="Services\" />
   </ItemGroup>
