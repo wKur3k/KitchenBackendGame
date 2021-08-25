@@ -2,12 +2,14 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using SimpleBackendGame.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +53,7 @@ namespace SimpleBackendGame
 
             services.AddControllers().AddFluentValidation();
             services.AddAutoMapper(this.GetType().Assembly);
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
             services.AddCors(options =>
