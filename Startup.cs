@@ -63,6 +63,7 @@ namespace SimpleBackendGame
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IHeroService, HeroService>();
             services.AddHttpContextAccessor();
             services.AddSwaggerGen();
             services.AddCors(options =>
