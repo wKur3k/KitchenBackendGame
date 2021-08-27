@@ -140,20 +140,5 @@ namespace SimpleBackendGame.Services
             return true;
         }
 
-        public ICollection<MessageDto> GetUserMessages(int userId)
-        {
-            var messages = _dbContext
-                .Messages
-                .Include(m => m.User)
-                .Where(m => m.UserId == userId)
-                .OrderBy(m => m.SentDate)
-                .ToList();
-            if (!messages.Any())
-            {
-                return null;
-            }
-            var result = _mapper.Map<List<MessageDto>>(messages);
-            return result;
-        }
     }
 }

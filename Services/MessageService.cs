@@ -47,5 +47,48 @@ namespace SimpleBackendGame.Services
             var result = _mapper.Map<List<MessageDto>>(messages);
             return result;
         }
+        public ICollection<MessageDto> GetUserMessages(int userId)
+        {
+            var messages = _dbContext
+                .Messages
+                .Include(m => m.User)
+                .Where(m => m.UserId == userId)
+                .OrderBy(m => m.SentDate)
+                .ToList();
+            if (!messages.Any())
+            {
+                return null;
+            }
+            var result = _mapper.Map<List<MessageDto>>(messages);
+            return result;
+        }
+
+        public bool RemoveUserMessages(int userId)
+        {
+            var messages = _dbContext
+                .Messages
+                .Where(m => m.UserId == userId);
+            if (!messages.Any())
+            {
+                return false;
+            }
+            messages.ToList().ForEach(c => c.MessageContent = "Removed by moderator");
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+        public bool RemoveMessage(int messageId)
+        {
+            var message = _dbContext
+                .Messages
+                .FirstOrDefault(m => m.Id == messageId);
+            if (message is null)
+            {
+                return false;
+            }
+            message.MessageContent = "Removed by moderator";
+            _dbContext.SaveChanges();
+            return true;
+        }
     }
 }

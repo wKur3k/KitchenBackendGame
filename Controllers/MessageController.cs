@@ -24,6 +24,7 @@ namespace SimpleBackendGame.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "user, moderator")]
         public ActionResult SendMessage([FromBody] SendMessageDto dto)
         {
             _messageService.SendMessage(dto);
@@ -42,11 +43,44 @@ namespace SimpleBackendGame.Controllers
             return Ok(messages);
         }
 
+
+        [HttpGet]
+        [Route("/user/{userId}")]
+        [Authorize(Roles = "moderator")]
+        public ActionResult<ICollection<MessageDto>> GetUserMessages([FromRoute] int userId)
+        {
+            var messages = _messageService.GetUserMessages(userId);
+            if (messages is null)
+            {
+                return NotFound();
+            }
+            return Ok(messages);
+        }
+
+        [HttpPut]
+        [Route("/user/{userId}")]
+        [Authorize(Roles = "moderator")]
+        public ActionResult RemoveUserMessages([FromRoute] int userId)
+        {
+            var areRemoved = _messageService.RemoveUserMessages(userId);
+            if (areRemoved)
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+        
         [HttpPut]
         [Authorize(Roles = "moderator")]
-        public ActionResult RemoveUserMessages()
+        [Route("{messageId}")]
+        public ActionResult RemoveMessage([FromRoute] int messageId)
         {
-            return Ok();
+            var isRemoved = _messageService.RemoveMessage(messageId);
+            if (isRemoved)
+            {
+                return Ok();
+            }
+            return NotFound();
         }
     }
 }

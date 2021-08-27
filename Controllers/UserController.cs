@@ -103,18 +103,5 @@ namespace SimpleBackendGame.Controllers
             }
             return NotFound("User not found");
         }
-
-        [HttpGet]
-        [Route("{userId}/message")]
-        [Authorize(Roles = "moderator")]
-        public ActionResult<ICollection<MessageDto>> GetUserMessages([FromRoute] int userId)
-        {
-            var messages = _userService.GetUserMessages(userId);
-            if(messages is null)
-            {
-                return NotFound();
-            }
-            return Ok(messages);
-        }
     }
 }
