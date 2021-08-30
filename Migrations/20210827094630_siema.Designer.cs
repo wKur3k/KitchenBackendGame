@@ -10,8 +10,8 @@ using SimpleBackendGame.Entities;
 namespace SimpleBackendGame.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20210825070817_testmigration")]
-    partial class testmigration
+    [Migration("20210827094630_siema")]
+    partial class siema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,13 +55,7 @@ namespace SimpleBackendGame.Migrations
                     b.Property<int>("Def")
                         .HasColumnType("int");
 
-                    b.Property<int>("Gold")
-                        .HasColumnType("int");
-
                     b.Property<int>("Hp")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Map")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -85,14 +79,29 @@ namespace SimpleBackendGame.Migrations
                     b.Property<int>("ActionLeft")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Art")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Art")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Atk")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Crit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Def")
+                        .HasColumnType("int");
 
                     b.Property<int>("Gold")
                         .HasColumnType("int");
 
+                    b.Property<int>("Hp")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Speed")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -149,6 +158,30 @@ namespace SimpleBackendGame.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("SimpleBackendGame.Entities.Quest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EnemyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoldReward")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Map")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnemyId")
+                        .IsUnique();
+
+                    b.ToTable("Quests");
+                });
+
             modelBuilder.Entity("SimpleBackendGame.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -162,16 +195,20 @@ namespace SimpleBackendGame.Migrations
                     b.Property<string>("HashedPassword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HeroId")
+                    b.Property<int?>("HeroId")
                         .HasColumnType("int");
 
                     b.Property<string>("Login")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HeroId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[HeroId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -202,15 +239,29 @@ namespace SimpleBackendGame.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SimpleBackendGame.Entities.Quest", b =>
+                {
+                    b.HasOne("SimpleBackendGame.Entities.Enemy", "Enemy")
+                        .WithOne("Quest")
+                        .HasForeignKey("SimpleBackendGame.Entities.Quest", "EnemyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enemy");
+                });
+
             modelBuilder.Entity("SimpleBackendGame.Entities.User", b =>
                 {
                     b.HasOne("SimpleBackendGame.Entities.Hero", "Hero")
                         .WithOne("User")
-                        .HasForeignKey("SimpleBackendGame.Entities.User", "HeroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SimpleBackendGame.Entities.User", "HeroId");
 
                     b.Navigation("Hero");
+                });
+
+            modelBuilder.Entity("SimpleBackendGame.Entities.Enemy", b =>
+                {
+                    b.Navigation("Quest");
                 });
 
             modelBuilder.Entity("SimpleBackendGame.Entities.Hero", b =>

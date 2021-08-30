@@ -11,7 +11,7 @@ namespace SimpleBackendGame.Entities
         public string Name { get; set; }
         public string Slot { get; set; }
         public int Stat { get; set; }
-        public byte[] Art { get; set; }
+        public string Art { get; set; }
         public int Price { get; set; }
         public ICollection<Hero> Heroes { get; set; }
 

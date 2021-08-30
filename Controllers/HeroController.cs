@@ -12,7 +12,7 @@ namespace SimpleBackendGame.Controllers
 {
     [Route("api/hero")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class HeroController : ControllerBase
     {
         private readonly IHeroService _heroService;
@@ -23,7 +23,7 @@ namespace SimpleBackendGame.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "user")]
+       // [Authorize(Roles = "user")]
         public ActionResult CreateHero([FromQuery] string name)
         {
             var heroId = _heroService.CreateHero(name);
@@ -33,5 +33,88 @@ namespace SimpleBackendGame.Controllers
             }
             return Ok(heroId);
         }
+        
+        [HttpPut]
+        [Route("item")]
+        public ActionResult AddItem([FromQuery] int itemId)
+        {
+            var isAdded = _heroService.AddItem(itemId);
+            if (isAdded)
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpGet]
+        [Route("{heroId}")]
+        public ActionResult<Hero> GetHero([FromRoute] int heroId)
+        {
+            var hero = _heroService.GetHero(heroId);
+            if(hero is null)
+            {
+                return NotFound();
+            }
+            return Ok(hero);
+        }
+
+        [HttpGet]
+        [Route("user/{userId}")]
+        public ActionResult<Hero> GetUserHero([FromRoute] int userId)
+        {
+            var hero = _heroService.GetUserHero(userId);
+            if (hero is null)
+            {
+                return NotFound();
+            }
+            return Ok(hero);
+        }
+
+        [HttpGet]
+        public ActionResult<ICollection<Hero>> GetHeroes()
+        {
+            var heroes = _heroService.GetHeroes();
+            if(heroes is null)
+            {
+                return NotFound();
+            }
+            return Ok(heroes);
+        }
+
+        [HttpDelete]
+        [Route("{heroId}")]
+        public ActionResult DeleteHero([FromRoute] int heroId)
+        {
+            var isDelted = _heroService.DeleteHero(heroId);
+            if (isDelted)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
+
+        [HttpDelete]
+        [Route("user/{userId}")]
+        public ActionResult DeleteUserHero([FromRoute] int userId)
+        {
+            var isDelted = _heroService.DeleteUserHero(userId);
+            if (isDelted)
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
+
+        [HttpPut]
+        [Route("quest/{questId}")]
+        public ActionResult GoQuest([FromRoute] int questId)
+        {
+            var questCompleted = _heroService.GoQuest(questId);
+            if (questCompleted)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }      
     }
 }

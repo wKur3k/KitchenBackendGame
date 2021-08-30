@@ -57,6 +57,7 @@ namespace SimpleBackendGame
 
             services.AddControllers().AddFluentValidation();
             services.AddDbContext<GameDbContext>();
+            services.AddScoped<GameDbSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
@@ -78,9 +79,11 @@ namespace SimpleBackendGame
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, GameDbSeeder seeder)
         {
             app.UseCors("FrontendClient");
+
+            seeder.Seed();
 
             if (env.IsDevelopment())
             {

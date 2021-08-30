@@ -14,6 +14,7 @@ namespace SimpleBackendGame.Entities
         public DbSet<Item> Items { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<Enemy> Enemies { get; set; }
+        public DbSet<Quest> Quests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

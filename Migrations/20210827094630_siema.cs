@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SimpleBackendGame.Migrations
 {
-    public partial class testmigration : Migration
+    public partial class siema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,13 +14,11 @@ namespace SimpleBackendGame.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Map = table.Column<int>(type: "int", nullable: false),
                     Atk = table.Column<int>(type: "int", nullable: false),
                     Def = table.Column<int>(type: "int", nullable: false),
                     Hp = table.Column<int>(type: "int", nullable: false),
                     Crit = table.Column<int>(type: "int", nullable: false),
                     Speed = table.Column<int>(type: "int", nullable: false),
-                    Gold = table.Column<int>(type: "int", nullable: false),
                     Art = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
@@ -36,8 +34,13 @@ namespace SimpleBackendGame.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ActionLeft = table.Column<int>(type: "int", nullable: false),
-                    Art = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Gold = table.Column<int>(type: "int", nullable: false)
+                    Art = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gold = table.Column<int>(type: "int", nullable: false),
+                    Hp = table.Column<int>(type: "int", nullable: false),
+                    Atk = table.Column<int>(type: "int", nullable: false),
+                    Def = table.Column<int>(type: "int", nullable: false),
+                    Crit = table.Column<int>(type: "int", nullable: false),
+                    Speed = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,6 +65,27 @@ namespace SimpleBackendGame.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Quests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GoldReward = table.Column<int>(type: "int", nullable: false),
+                    Map = table.Column<int>(type: "int", nullable: false),
+                    EnemyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Quests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Quests_Enemies_EnemyId",
+                        column: x => x.EnemyId,
+                        principalTable: "Enemies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -70,7 +94,8 @@ namespace SimpleBackendGame.Migrations
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CanUseChat = table.Column<bool>(type: "bit", nullable: false),
-                    HeroId = table.Column<int>(type: "int", nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeroId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,7 +105,7 @@ namespace SimpleBackendGame.Migrations
                         column: x => x.HeroId,
                         principalTable: "Heroes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,17 +164,21 @@ namespace SimpleBackendGame.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Quests_EnemyId",
+                table: "Quests",
+                column: "EnemyId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_HeroId",
                 table: "Users",
                 column: "HeroId",
-                unique: true);
+                unique: true,
+                filter: "[HeroId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Enemies");
-
             migrationBuilder.DropTable(
                 name: "HeroItem");
 
@@ -157,10 +186,16 @@ namespace SimpleBackendGame.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "Quests");
+
+            migrationBuilder.DropTable(
                 name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Enemies");
 
             migrationBuilder.DropTable(
                 name: "Heroes");
