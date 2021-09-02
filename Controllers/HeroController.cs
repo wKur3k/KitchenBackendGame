@@ -103,18 +103,6 @@ namespace SimpleBackendGame.Controllers
                 return NoContent();
             }
             return NotFound();
-        }
-
-        [HttpPut]
-        [Route("quest/{questId}")]
-        public ActionResult GoQuest([FromRoute] int questId)
-        {
-            var questCompleted = _heroService.GoQuest(questId);
-            if (questCompleted)
-            {
-                return Ok();
-            }
-            return BadRequest();
-        }      
+        }     
     }
 }
