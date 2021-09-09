@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Kitchen game</title>
+</head>
+<body>
+    <div class="main-container">
+        <div class="sub-container">
+            <div class="login=choice">
+                <p>What would you like to do?</p>
+                <button onclick="showElement('loginDiv')">Login</button>
+                <button onclick="showElement('registerDiv')">Register</button>
+            </div>
+            <div id="loginDiv" style="display:none">
+                <p>Login</p>
+                <form id="formLogin">
+                    <br><input type="text" id="login" name="login" placeholder="Login"><br><br>
+                    <input type="password" id="password" name="password" placeholder="Password">
+                </form>
+                <br><button onclick="sendLogin()">Login</button>
+            </div>
+            <div id="registerDiv" style="display:none">
+                <p>Register</p>
+                <form id="formRegister">
+                    <br><input type="text" id="loginR" name="login" placeholder="Login"><br><br>
+                    <input type="password" id="passwordR1" name="password1" placeholder="Password"><br><br>
+                    <input type="password" id="passwordR2" name="password2" placeholder="Cofirm Password">
+                </form>
+                <br><button onclick="sendRegister()">Register</button>
+            </div>
+            <div id="invalid" style="display: none;"></div>
+        </div>
+    </div>
+</body>
+</html>

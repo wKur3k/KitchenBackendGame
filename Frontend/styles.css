@@ -1,0 +1,27 @@
+.main-container{
+    background-color: lightcoral;
+    width: 50%;
+    margin: auto;
+}
+.button-mainpage{
+    width: 49.6%;
+    display: inline-block;
+}
+.sub-container{
+    text-align: center;
+}
+.top-bar{
+    overflow: hidden;
+    background-color: lightseagreen;
+}
+.navs{
+    float: right;
+}
+.top-bar a{
+    font-size: 50px;
+    background-color: red;
+    border-radius: 4px;
+}
+div{
+    border: 1px solid black;
+}

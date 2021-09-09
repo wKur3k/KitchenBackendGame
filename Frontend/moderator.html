@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+    <title>Kitchen backend game</title>
+</head>
+<body>
+    <header class="top-bar">
+        <a href="">logo</a>
+        <div class="navs">
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </header>
+    <div class="main-container">
+        <p>Moderator Panel</p>
+        <div>
+            <p>Manage Users</p>
+            <div>
+                <div>
+                    <p>Show Users</p>
+                    <button onclick="getUsers()">Get Users</button>
+                    <div id="users" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User Id</th>
+                                    <th>Login</th>
+                                    <th>Can Use Chat</th>
+                                    <th>role</th>
+                                    <th>heroId</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <p>Get User</p>
+                    <input id="userId" type="number">
+                    <button onclick="getUser()">Get User</button>
+                    <div id="user" style="display: none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User Id</th>
+                                    <th>Login</th>
+                                    <th>Can Use Chat</th>
+                                    <th>role</th>
+                                    <th>heroId</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTBody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <p>Mute User</p>
+                    <input type="number" id="muteUserId">
+                    <button onclick="muteUser()">Mute user</button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p>Manage Messages</p>
+            <div>
+                <p>Get Messages</p>
+                <button onclick="getMessages()">Get Messages</button>
+                <div id="messages" style="display: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Message Id</th>
+                                <th>user Id</th>
+                                <th>Contetn</th>
+                                <th>Sent Date</th>
+                                <th>Login</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messageTBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <p>Get User's Messages</p>
+                <input type="number" id="messageUserId">
+                <button onclick="getUserMessages()">Get User's Messages</button>
+                <div id="messagesUser" style="display: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Message Id</th>
+                                <th>user Id</th>
+                                <th>Contetn</th>
+                                <th>Sent Date</th>
+                                <th>Login</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messageUserTBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <p>Remove Message</p>
+                <input type="number" id="messageId">
+                <button onclick="removeMessage()">Remove Message</button>
+            </div>
+            <div>
+                <p>Remove User's Messages</p>
+                <input id="messageUserIdR" type="number">
+                <button onclick="removeUserMessage()">Remove User's Messages</button>
+            </div>
+        </div>
+        <div id="invalid" style="display: none;"></div>
+    </div>
+</body>
+</html>
