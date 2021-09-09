@@ -14,6 +14,8 @@ namespace SimpleBackendGame
         {
             CreateMap<Message, MessageDto>()
                 .ForMember(m => m.Login, c => c.MapFrom(s => s.User.Login));
+            CreateMap<User, UserDto>();
+            CreateMap<Hero, HeroDto>();
         }
     }
 }

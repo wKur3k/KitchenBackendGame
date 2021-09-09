@@ -45,7 +45,7 @@ namespace SimpleBackendGame.Controllers
 
 
         [HttpGet]
-        [Route("/user/{userId}")]
+        [Route("{userId}")]
         [Authorize(Roles = "moderator")]
         public ActionResult<ICollection<MessageDto>> GetUserMessages([FromRoute] int userId)
         {
@@ -58,7 +58,7 @@ namespace SimpleBackendGame.Controllers
         }
 
         [HttpPut]
-        [Route("/user/{userId}")]
+        [Route("user/{userId}")]
         [Authorize(Roles = "moderator")]
         public ActionResult RemoveUserMessages([FromRoute] int userId)
         {

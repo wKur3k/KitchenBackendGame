@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBackendGame.Entities;
+using SimpleBackendGame.Models;
 using SimpleBackendGame.Services;
 using System;
 using System.Collections.Generic;
@@ -60,13 +61,14 @@ namespace SimpleBackendGame.Controllers
 
         [HttpGet]
         [Route("user/{userId}")]
-        public ActionResult<Hero> GetUserHero([FromRoute] int userId)
+        public ActionResult<HeroDto> GetUserHero([FromRoute] int userId)
         {
             var hero = _heroService.GetUserHero(userId);
             if (hero is null)
             {
                 return NotFound();
             }
+
             return Ok(hero);
         }
 

@@ -36,6 +36,14 @@ namespace SimpleBackendGame.Services
             };
             var hashedPassword = _passwordHasher.HashPassword(newUser, dto.Password);
             newUser.HashedPassword = hashedPassword;
+            if (dto.Role == "admin")
+            {
+                newUser.Role = "admin";
+            }
+            if (dto.Role == "moderator")
+            {
+                newUser.Role = "moderator";
+            }
             _dbContext.Users.Add(newUser);
             _dbContext.SaveChanges();
             return newUser.Id;
@@ -51,7 +59,7 @@ namespace SimpleBackendGame.Services
             var result = _passwordHasher.VerifyHashedPassword(user, user.HashedPassword, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                return "Password or Login is incorrect";
+                return "Login or Password is incorrect";
             }
             var claims = new List<Claim>()
             {
@@ -72,7 +80,7 @@ namespace SimpleBackendGame.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
-        public User GetUser(int userId)
+        public UserDto GetUser(int userId)
         {
             var user = _dbContext
                 .Users
@@ -82,10 +90,11 @@ namespace SimpleBackendGame.Services
             {
                 return null;
             }
-            return user;
+            var result = _mapper.Map<UserDto>(user);
+            return result;
         }
 
-        public ICollection<User> GetAll()
+        public ICollection<UserDto> GetAll()
         {
             var users = _dbContext
                 .Users
@@ -95,7 +104,9 @@ namespace SimpleBackendGame.Services
             {
                 return null;
             }
-            return users;
+            var result = _mapper.Map<ICollection<UserDto>>(users);
+
+            return result;
         }
 
         public bool DeleteUser(int userId)

@@ -9,8 +9,8 @@ namespace SimpleBackendGame.Services
         bool ChangeRole(int userId, string role);
         bool DeleteUser(int userId);
         string GenerateJwtToken(LoginUserDto dto);
-        ICollection<User> GetAll();
-        User GetUser(int userId);
+        ICollection<UserDto> GetAll();
+        UserDto GetUser(int userId);
         bool MuteUser(int userId);
         int RegisterUser(RegisterUserDto dto);
     }

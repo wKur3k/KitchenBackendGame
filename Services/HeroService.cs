@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SimpleBackendGame.Entities;
+using SimpleBackendGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +13,13 @@ namespace SimpleBackendGame.Services
     {
         private readonly GameDbContext _dbContext;
         private readonly IUserContextService _userContextService;
+        private readonly IMapper _mapper;
 
-        public HeroService(GameDbContext dbContext, IUserContextService userContextService)
+        public HeroService(GameDbContext dbContext, IUserContextService userContextService, IMapper mapper)
         {
             _dbContext = dbContext;
             _userContextService = userContextService;
+            _mapper = mapper;
         }
 
         public int CreateHero(string name)
@@ -104,7 +108,7 @@ namespace SimpleBackendGame.Services
             }
             return hero;
         }
-        public Hero GetUserHero(int userId)
+        public HeroDto GetUserHero(int userId)
         {
             var user = _dbContext
                 .Users
@@ -118,7 +122,8 @@ namespace SimpleBackendGame.Services
             {
                 return null;
             }
-            return hero;
+            var result = _mapper.Map<HeroDto>(hero);
+            return result;
         }
         public ICollection<Hero> GetHeroes()
         {

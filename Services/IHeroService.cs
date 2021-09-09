@@ -1,4 +1,5 @@
 ﻿using SimpleBackendGame.Entities;
+using SimpleBackendGame.Models;
 using System.Collections.Generic;
 
 namespace SimpleBackendGame.Services
@@ -11,7 +12,6 @@ namespace SimpleBackendGame.Services
         bool DeleteUserHero(int userId);
         Hero GetHero(int heroId);
         ICollection<Hero> GetHeroes();
-        Hero GetUserHero(int userId);
-        bool GoQuest(int questId);
+        HeroDto GetUserHero(int userId);
     }
 }

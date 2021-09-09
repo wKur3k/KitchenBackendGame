@@ -7,7 +7,7 @@ namespace SimpleBackendGame.Models
 {
     public class MessageDto
     {
-        public int MessageId { get; set; }
+        public int Id { get; set; }
         public int UserId { get; set; }
         public string MessageContent { get; set; }
         public DateTime SentDate { get; set; }
