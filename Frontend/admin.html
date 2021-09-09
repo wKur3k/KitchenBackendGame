@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+    <title>Admin Panel</title>
+</head>
+<body>
+    <header class="top-bar">
+        <a href="">logo</a>
+        <div class="navs">
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
+    </header>
+    <div class="main-container">
+        <p>Admin Panel</p>
+        <div>
+            <p>Delete User by Id</p>
+            <input type="number" id="deleteUserId">
+            <button onclick="deleteUser()">Delete</button>
+            <div id="invalid" style="display: none;"></div>
+        </div>
+        <div>
+                <div>
+                    <p>Create Account</p>
+                    <div>
+                        <form>
+                            <br><input type="text" id="loginR" placeholder="Login"><br><br>
+                            <input type="password" id="passwordR1" placeholder="Password"><br><br>
+                            <input type="password" id="passwordR2" placeholder="Cofirm Password">
+                        </form>
+                        <br><button id="createAdmin" onclick="sendRegisterAdmin()">Register Admin</button>
+                        <br><button id="createModerator" onclick="sendRegisterModerator()">Register Admin</button>
+                    </div>
+                </div>
+        </div>
+        <div id="invalidR" style="display: none;"></div>
+    </div>
+</body>
+</html>
