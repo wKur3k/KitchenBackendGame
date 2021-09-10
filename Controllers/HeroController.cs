@@ -13,7 +13,7 @@ namespace SimpleBackendGame.Controllers
 {
     [Route("api/hero")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class HeroController : ControllerBase
     {
         private readonly IHeroService _heroService;
@@ -24,7 +24,7 @@ namespace SimpleBackendGame.Controllers
         }
 
         [HttpPost]
-       // [Authorize(Roles = "user")]
+        [Authorize(Roles = "user")]
         public ActionResult CreateHero([FromQuery] string name)
         {
             var heroId = _heroService.CreateHero(name);
@@ -37,6 +37,7 @@ namespace SimpleBackendGame.Controllers
         
         [HttpPut]
         [Route("item")]
+        [Authorize(Roles = "user")]
         public ActionResult AddItem([FromQuery] int itemId)
         {
             var isAdded = _heroService.AddItem(itemId);
@@ -85,6 +86,8 @@ namespace SimpleBackendGame.Controllers
 
         [HttpDelete]
         [Route("{heroId}")]
+        [Authorize(Roles = "admin, moderator")]
+
         public ActionResult DeleteHero([FromRoute] int heroId)
         {
             var isDelted = _heroService.DeleteHero(heroId);
@@ -97,6 +100,7 @@ namespace SimpleBackendGame.Controllers
 
         [HttpDelete]
         [Route("user/{userId}")]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult DeleteUserHero([FromRoute] int userId)
         {
             var isDelted = _heroService.DeleteUserHero(userId);
