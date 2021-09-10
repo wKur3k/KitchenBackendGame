@@ -21,6 +21,7 @@ namespace SimpleBackendGame.Controllers
 
         [HttpPost]
         [Route("{questId}")]
+        [Authorize(Roles = "user")]
         public ActionResult GoQuest([FromRoute] int questId)
         {
             var questCompleted = _questService.GoQuest(questId);
